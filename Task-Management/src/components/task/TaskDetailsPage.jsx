@@ -31,7 +31,7 @@ export default function TaskDetails() {
     const [taskToDelete, setTaskToDelete] = useState(null);
     const [showModal, setShowModal] = useState(false);
     console.log('task', task);
-    
+
 
     useEffect(() => {
         if (task && task.assigned_members) {
@@ -43,10 +43,10 @@ export default function TaskDetails() {
                 createdBy: created_by
             })
             console.log('defaultUser', superadmin);
-            
+
         }
     }, [task])
-console.log('Array.isArray(taskUser.defaultUser)', taskUser.defaultUser.length === 0);
+    console.log('Array.isArray(taskUser.defaultUser)', taskUser.defaultUser.length === 0);
 
     useEffect(() => {
         dispatch(getTaskDetail(task_id));
@@ -114,7 +114,7 @@ console.log('Array.isArray(taskUser.defaultUser)', taskUser.defaultUser.length =
     const priorityConfig = getPriorityConfig(task?.priority);
     const PriorityIcon = priorityConfig.icon;
 
-    const teamMembers = task.assigned_members?.filter(t => t.id != task.user_id && t.user_role !=='superadmin') || []
+    const teamMembers = task.assigned_members?.filter(t => t.id != task.user_id && t.user_role !== 'superadmin') || []
 
     const displayMembers = showAllMembers ? teamMembers : teamMembers.slice(0, 6)
     const confirmDelete = (task) => {
@@ -309,33 +309,33 @@ console.log('Array.isArray(taskUser.defaultUser)', taskUser.defaultUser.length =
 
                                 {Array.isArray(taskUser.defaultUser) && taskUser.defaultUser.length === 0 ? (
                                     <p className="text-gray-500">No superadmins found.</p>
-                                ) : Array.isArray(taskUser.defaultUser) ? 
-                                ( 
-                                    <div className="grid gap-4">
-                                    {taskUser.defaultUser.map((user) => (
-                                       <div key={user.id} className="flex items-center gap-3 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100 hover:shadow-md transition-shadow">
-                                                <img
-                                                    src={user.profile_picture || 'http://localhost:5000/public/images/default-profile.png'}
-                                                    alt={user.name}
-                                                    className="w-8 h-8 rounded-full object-cover"
-                                                    onError={(e) => {
-                                                        e.target.src = 'http://localhost:5000/public/images/default-profile.png';
-                                                    }}
-                                                />
-                                                <div className="min-w-0 flex-1">
-                                                    <div className="font-medium text-gray-800 truncate" title={user.email}>
-                                                        {user.email}
-                                                    </div>
-                                                    <div className="text-sm text-gray-500 capitalize">
-                                                        {user.user_role}
+                                ) : Array.isArray(taskUser.defaultUser) ?
+                                    (
+                                        <div className="grid gap-4">
+                                            {taskUser.defaultUser.map((user) => (
+                                                <div key={user.id} className="flex items-center gap-3 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100 hover:shadow-md transition-shadow">
+                                                    <img
+                                                        src={user.profile_picture || 'http://localhost:5000/public/images/default-profile.png'}
+                                                        alt={user.name}
+                                                        className="w-8 h-8 rounded-full object-cover"
+                                                        onError={(e) => {
+                                                            e.target.src = 'http://localhost:5000/public/images/default-profile.png';
+                                                        }}
+                                                    />
+                                                    <div className="min-w-0 flex-1">
+                                                        <div className="font-medium text-gray-800 truncate" title={user.email}>
+                                                            {user.email}
+                                                        </div>
+                                                        <div className="text-sm text-gray-500 capitalize">
+                                                            {user.user_role}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                    ))}
-                                    </div>
-                                ) : (
-                                    <p className="text-red-500 text-sm">Invalid data format for superadmins.</p>
-                                )}
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-red-500 text-sm">Invalid data format for superadmins.</p>
+                                    )}
                             </div>
                         </div>
 

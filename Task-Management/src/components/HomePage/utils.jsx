@@ -31,6 +31,7 @@ export const filterProjects = (projects, filter, searchTerm) => {
   });
 };
 
+
 export const getTaskStatusIcon = (status) => {
   const s = status?.toLowerCase();
   if (s === 'completed') return <CheckCircle className="w-4 h-4 text-green-500" />;
