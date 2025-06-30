@@ -21,7 +21,8 @@ import {
   taskOperationReducer,    // for create/update/delete
   taskNotesReducer,         // for notes CRUD
   taskDetailReducer,
-  statusListReducer
+  statusListReducer,
+  userTasksReducer
 } from "../reducers/taskReducers";  // adjust the path if needed
 
 
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   taskDetail: taskDetailReducer,
   taskOperations: taskOperationReducer,
   taskNotes: taskNotesReducer,
+  userTasks: userTasksReducer,
 
   statusList: statusListReducer,
 

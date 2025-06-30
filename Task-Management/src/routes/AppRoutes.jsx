@@ -102,7 +102,7 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="/users/edit/:id"
+            path="/users/editUser/:id"
             element={
               <PrivateRoute isAuthenticated={isAuthenticated}>
                 <EditUserPage />

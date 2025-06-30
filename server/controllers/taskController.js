@@ -54,7 +54,7 @@ const createTask = catchAsyncError(async (req, res, next) => {
 
   // Filter out creator from user_ids to avoid duplicate assignment emails
   const filteredUserIds = user_ids.filter(id => id !== created_by);
-   const [superadmins] = await db.execute('SELECT id FROM users WHERE role = ?', ['superadmin']);
+  const [superadmins] = await db.execute('SELECT id FROM users WHERE role = ?', ['superadmin']);
   const superadminIds = superadmins.map(user => user.id);
 
   // Unique assigned members (including creator)
@@ -446,6 +446,111 @@ const getAllTasks = catchAsyncError(async (req, res, next) => {
   });
 });
 
+
+
+// const getTasksByUser = catchAsyncError(async (req, res, next) => {
+//   const userId = req.user.id;
+//   const { project_id } = req.query;
+
+//   let query = `
+//     SELECT t.*, ts.name AS status,
+//       JSON_ARRAYAGG(
+//         JSON_OBJECT(
+//           'id', u.id,
+//           'name', u.name,
+//           'email', u.email,
+//           'user_role', u.role
+//         )
+//       ) AS assigned_members
+//     FROM task t
+//     LEFT JOIN task_status ts ON t.status_id = ts.id
+//     LEFT JOIN task_assign_member tam ON t.id = tam.task_id
+//     LEFT JOIN users u ON tam.user_id = u.id
+//     WHERE tam.user_id = ?
+//   `;
+
+//   const values = [userId];
+
+//   if (project_id) {
+//     query += ` AND t.project_id = ?`;
+//     values.push(project_id);
+//   }
+
+//   query += `
+//     GROUP BY t.id
+//     ORDER BY t.created_at DESC
+//   `;
+//   console.log('Fetching tasks for user:', userId);
+//   console.log('Query:', query);
+//   console.log('Values:', values);
+
+//   const [tasks] = await db.execute(query, values);
+
+//   res.status(200).json({
+//     tasks: tasks.map(task => ({
+//       ...task,
+//       assigned_members: typeof task.assigned_members === 'string'
+//         ? JSON.parse(task.assigned_members)
+//         : task.assigned_members || []
+//     }))
+//   });
+// });
+const getTasksByUser = catchAsyncError(async (req, res, next) => {
+  const userId = req.user.id;
+  const { project_id } = req.query;
+
+  // Step 1: Find all task IDs assigned to this user
+  let taskIdQuery = `SELECT DISTINCT t.id
+    FROM task t
+    JOIN task_assign_member tam ON t.id = tam.task_id
+    WHERE tam.user_id = ?`;
+
+  const taskValues = [userId];
+  if (project_id) {
+    taskIdQuery += ` AND t.project_id = ?`;
+    taskValues.push(project_id);
+  }
+
+  const [taskIdsResult] = await db.execute(taskIdQuery, taskValues);
+  const taskIds = taskIdsResult.map(row => row.id);
+
+  if (taskIds.length === 0) {
+    return res.status(200).json({ tasks: [] });
+  }
+
+  // Step 2: Get task details + all assigned users
+  const placeholders = taskIds.map(() => '?').join(', ');
+  const taskQuery = `
+    SELECT t.*, ts.name AS status,
+      JSON_ARRAYAGG(
+        JSON_OBJECT(
+          'id', u.id,
+          'name', u.name,
+          'email', u.email,
+          'user_role', u.role
+        )
+      ) AS assigned_members
+    FROM task t
+    LEFT JOIN task_status ts ON t.status_id = ts.id
+    LEFT JOIN task_assign_member tam ON t.id = tam.task_id
+    LEFT JOIN users u ON tam.user_id = u.id
+    WHERE t.id IN (${placeholders})
+    GROUP BY t.id
+    ORDER BY t.created_at DESC
+  `;
+
+  const [tasks] = await db.execute(taskQuery, taskIds);
+
+  res.status(200).json({
+    tasks: tasks.map(task => ({
+      ...task,
+      assigned_members: typeof task.assigned_members === 'string'
+        ? JSON.parse(task.assigned_members)
+        : task.assigned_members || []
+    }))
+  });
+});
+
 module.exports = {
   createTask,
   getSingleTaskDetail,
@@ -455,6 +560,7 @@ module.exports = {
   addTaskNote,
   getTaskNotes,
   deleteTaskNote,
-  getAllTasks 
+  getAllTasks,
+  getTasksByUser
 };
 

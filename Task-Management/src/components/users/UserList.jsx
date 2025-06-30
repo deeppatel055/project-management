@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { User, Trash2, Edit, Plus, Search, ChevronLeft, ChevronRight, Filter, X, Menu } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers, deleteUser, editUser } from '../../actions/userActions';
+import { getAllUsers, deleteUser } from '../../actions/userActions';
 import Loading from '../common/Loading';
 import DeleteModel from './../models/DeleteModel';
 import EditLogo from '../../assets/edit.svg';
@@ -32,7 +32,7 @@ const UserList = ({ sidebarOpen, isMobile, isAuthenticated }) => {
 
 
   const { users, loading } = useSelector((state) => state.allUsers);
-  
+
 
   const { user } = useSelector((state) => state.user);
 
@@ -100,7 +100,10 @@ const UserList = ({ sidebarOpen, isMobile, isAuthenticated }) => {
   };
 
   const handleEditUser = (user) => {
+    console.log('Navigating to edit user:', user);
+    console.log('Navigating to edit user:',`/users/editUser/${user.id}`);
     navigate(`/users/editUser/${user.id}`);
+
   };
 
   const handlePageChange = (page) => {
@@ -202,7 +205,7 @@ const UserList = ({ sidebarOpen, isMobile, isAuthenticated }) => {
                         title="EditUser user"
                       >
                         {/* <EditUser className="w-4 h-4" /> */}
-                        <img src={EditLogo} alt="" className="w-4 h-4" />
+                        <img src={EditLogo} alt="Edit User" className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => confirmDelete(user)}
@@ -285,7 +288,7 @@ const UserList = ({ sidebarOpen, isMobile, isAuthenticated }) => {
                               />
                               <div className="min-w-0 flex-1">
                                 <div className={`font-medium  truncate ${user.is_verified ? 'text-gray-900' : 'text-gray-600'}`}>{user.name}
-                                  
+
                                 </div>
                                 <div className="text-sm text-gray-500">ID: {user.id}</div>
                               </div>
@@ -314,8 +317,8 @@ const UserList = ({ sidebarOpen, isMobile, isAuthenticated }) => {
                                 aria-label="Edit user"
                               >
                                 {/* <Edit className="w-4 h-4" /> */}
-                                <img src={EditLogo} alt="" className={`w-4 h-4  ${user.is_verified ? 'test-[#5356FF]' : 'text-[#7476fd]'}`} />
-                               </button>
+                                <img src={EditLogo} alt="Edit User" className={`w-4 h-4  ${user.is_verified ? 'test-[#5356FF]' : 'text-[#7476fd]'}`} />
+                              </button>
                               <button
                                 onClick={() => confirmDelete(user)}
                                 className={`p-1.5 lg:p-2  hover:bg-red-50 rounded-lg transition-colors  ${user.is_verified ? 'text-[#FF5B5B]' : 'text-[#ff8585]'}`}
@@ -410,7 +413,7 @@ const UserList = ({ sidebarOpen, isMobile, isAuthenticated }) => {
         )}
       </div>
 
-      <DeleteModel        isOpen={showModal}
+      <DeleteModel isOpen={showModal}
         onConfirm={handleDeleteConfirmed}
         onCancel={() => setShowModal(false)}
         deleteTarget={deleteContent}

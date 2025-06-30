@@ -28,6 +28,9 @@ import {
   GET_STATUS_REQUEST,
   GET_STATUS_SUCCESS,
   GET_STATUS_FAIL,
+  USER_TASKS_SUCCESS,
+  USER_TASKS_REQUEST,
+  USER_TASKS_FAIL,
 } from "../constants/taskConstants";
 
 // Get all tasks by project ID
@@ -68,23 +71,7 @@ export const getTaskDetail = (taskId) => async (dispatch) => {
   }
 };
 
-// Create a new task
-// export const createTask = (projectId, taskData) => async (dispatch) => {
-//   try {
-//     dispatch({ type: ADD_TASK_REQUEST });
-//     await API.post(`/tasks/${projectId}/add`, taskData, {
-//       headers: { "Content-Type": "application/json" },
-//       withCredentials: true,
-//     });
-//     dispatch({ type: ADD_TASK_SUCCESS });
-//     dispatch(getTasksByProject(projectId));
-//   } catch (error) {
-//     dispatch({
-//       type: ADD_TASK_FAIL,
-//       payload: error.response?.data?.message || error.message,
-//     });
-//   }
-// };
+
 
 export const createTask = (projectId, taskData) => async (dispatch) => {
   try {
@@ -112,23 +99,7 @@ export const createTask = (projectId, taskData) => async (dispatch) => {
   }
 };
 
-// Update task
-// export const updateTask = (taskId, taskData, projectId) => async (dispatch) => {
-//   try {
-//     dispatch({ type: UPDATE_TASK_REQUEST });
-//     await API.put(`/tasks/${taskId}`, taskData, {
-//       headers: { "Content-Type": "application/json" },
-//       withCredentials: true,
-//     });
-//     dispatch({ type: UPDATE_TASK_SUCCESS });
-//     dispatch(getTasksByProject(projectId));
-//   } catch (error) {
-//     dispatch({
-//       type: UPDATE_TASK_FAIL,
-//       payload: error.response?.data?.message || error.message,
-//     });
-//   }
-// };
+
 export const updateTask = (taskId, taskData, projectId) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_TASK_REQUEST });
@@ -168,20 +139,6 @@ export const deleteTask = (taskId, projectId) => async (dispatch) => {
   }
 };
 
-// Add note to task
-// export const addTaskNote = (taskId, note) => async (dispatch) => {
-//   try {
-//     dispatch({ type: ADD_TASK_NOTE_REQUEST });
-//     const { data } = await API.post(`/tasks/${taskId}/notes`, { note }, { withCredentials: true });
-//     dispatch({ type: ADD_TASK_NOTE_SUCCESS, payload: data.note });
-//     dispatch(getTaskNotes(taskId));
-//   } catch (error) {
-//     dispatch({
-//       type: ADD_TASK_NOTE_FAIL,
-//       payload: error.response?.data?.message || error.message,
-//     });
-//   }
-// };
 export const addTaskNote = (taskId, note) => async (dispatch) => {
   try {
     dispatch({ type: GET_TASK_NOTES_REQUEST });
@@ -240,6 +197,29 @@ export const getStatuses = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: GET_STATUS_FAIL,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
+
+
+export const getTasksByUser = (projectId = "") => async (dispatch) => {
+  try {
+    dispatch({ type: USER_TASKS_REQUEST });
+
+    const query = projectId ? `?project_id=${projectId}` : "";
+
+    const { data } = await API.get(`/tasks/taskByUser${query}`, {
+      withCredentials: true,
+    });
+
+    dispatch({
+      type: USER_TASKS_SUCCESS,
+      payload: data.tasks,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_TASKS_FAIL,
       payload: error.response?.data?.message || error.message,
     });
   }

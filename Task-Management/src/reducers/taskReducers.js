@@ -27,6 +27,9 @@ import {
   GET_STATUS_REQUEST,
   GET_STATUS_SUCCESS,
   GET_STATUS_FAIL,
+  USER_TASKS_REQUEST,
+  USER_TASKS_SUCCESS,
+  USER_TASKS_FAIL,
 } from "../constants/taskConstants";
 
 // ✅ Tasks List Reducer
@@ -152,6 +155,22 @@ export const statusListReducer = (state = { statuses: [] }, action) => {
       return { loading: false, statuses: action.payload };
     case GET_STATUS_FAIL:
       return { loading: false, error: action.payload, statuses: [] };
+    default:
+      return state;
+  }
+};
+
+
+export const userTasksReducer = (state = { tasks: [] }, action) => {
+  switch (action.type) {
+    case USER_TASKS_REQUEST:
+      return { loading: true, tasks: [] };
+    case USER_TASKS_SUCCESS:
+      return { loading: false, tasks: action.payload };
+    case USER_TASKS_FAIL:
+      return { loading: false, error: action.payload };
+    case CLEAR_ERRORS:
+      return { ...state, error: null };
     default:
       return state;
   }

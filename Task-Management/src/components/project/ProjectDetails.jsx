@@ -25,7 +25,7 @@ export default function ProjectDetails() {
     const [showModal, setShowModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [showAllMembers, setShowAllMembers] = useState(false);
-    const [activeTab, setActiveTab] = useState('overview');
+    const [activeTab, setActiveTab] = useState('projectTask');
     const [deleteContent, setDeleteContent] = useState('');
     const [projectToDelete, setProjectToDelete] = useState(null);
     const { user } = useSelector((state) => state.user);

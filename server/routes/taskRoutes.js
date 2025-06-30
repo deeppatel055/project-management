@@ -9,6 +9,7 @@ const {
   deleteTaskNote,
   getSingleTaskDetail,
   getAllTasks,
+  getTasksByUser,
 } = require('../controllers/taskController');
 
 const { isAuthenticatedUser, authorizeRoles } = require('../middleware/auth');
@@ -81,5 +82,8 @@ router.delete(
   isAuthenticatedUser,
   deleteTaskNote
 );
+
+router.get('/taskByUser', isAuthenticatedUser, getTasksByUser);
+
 
 module.exports = router;
