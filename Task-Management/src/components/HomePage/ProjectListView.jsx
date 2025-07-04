@@ -1,12 +1,12 @@
 import { Calendar, Users, Tag, User, Eye, Edit, Target } from 'lucide-react';
-import { getStatusColor, getStatusIcon } from './utils';
+import StatusBadge from './../StatusBadge';
 
 const ProjectListView = ({ project, onView, onEdit, navigateTo, userTasks }) => {
 
   return (
     <div
       onClick={() => navigateTo(project.id)}
-      className="bg-white rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border border-gray-100"
+      className="bg-white rounded-xl border border-transparent  hover:border-[#5356FF]  transition duration-300 cursor-pointer transform"
     >
       <div className="p-4">
         <div className="flex justify-between">
@@ -18,11 +18,12 @@ const ProjectListView = ({ project, onView, onEdit, navigateTo, userTasks }) => 
               </div>
 
               <div className="flex items-center space-x-6 text-sm text-gray-600">
-                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(project.status)}`}>
+                {/* <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(project.status)}`}>
                   {getStatusIcon(project.status)}
                   <span className="ml-1">{project.status || 'No Status'}</span>
-                </span>
+                </span> */}
 
+ <StatusBadge status={project.status} withBorder />
                
 
                 <div className="flex items-center">

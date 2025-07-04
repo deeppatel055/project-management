@@ -1,6 +1,7 @@
 import { Calendar, Users, User, Eye, Edit, MoreVertical, Trash2 } from "lucide-react";
 import { getTaskStatusColor, getTaskStatusIcon } from "./utils";
 import { useEffect, useRef, useState } from "react";
+import StatusBadge from './../StatusBadge';
 
 const TaskGridView = ({ task, navigateTo, onDelete, onEdit }) => {
 
@@ -55,7 +56,7 @@ const TaskGridView = ({ task, navigateTo, onDelete, onEdit }) => {
     return (
         <div
             onClick={() => navigateTo(task.id)}
-            className="bg-white rounded-xl hover: transition duration-300 cursor-pointer transform hover:shadow-xl relative"
+            className="bg-white rounded-xl border border-transparent   hover:border-[#5356FF]  transition duration-300 cursor-pointer transform relative"
         >
 
             <div className="p-6">
@@ -99,10 +100,8 @@ const TaskGridView = ({ task, navigateTo, onDelete, onEdit }) => {
                 <div className="pt-4 border-t border-gray-200"></div>
 
                 <div className="flex gap-1 items-center mb-4">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getTaskStatusColor(task.status)}`}>
-                        {getTaskStatusIcon(task.status)}
-                        <span className="ml-1">{task.status || 'No Status'}</span>
-                    </span>
+                    <StatusBadge status={task.status} withBorder />
+
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getTaskStatusColor(task.status)}`}>
                         {getTaskStatusIcon(task.status)}
                         <span className="ml-1">{task.priority || 'No Priority'}</span>

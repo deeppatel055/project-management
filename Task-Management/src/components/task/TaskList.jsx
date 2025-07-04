@@ -1,6 +1,8 @@
+import { CalendarDays } from 'lucide-react';
 import React, { useState, useMemo } from 'react'
 import { useSelector } from 'react-redux';
 import { Navigate, NavLink, useNavigate, useParams } from 'react-router-dom';
+import StatusBadge from './../StatusBadge';
 
 const TaskList = () => {
     const navigate = useNavigate();
@@ -243,9 +245,10 @@ const TaskList = () => {
                                                 {task.title || task.name || 'Untitled Task'}
                                             </h4>
                                             <div className="flex gap-2">
-                                                <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getTaskStatusColor(task.status)}`}>
+                                                {/* <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getTaskStatusColor(task.status)}`}>
                                                     {task.status || 'Not Set'}
-                                                </span>
+                                                </span> */}
+                                                <StatusBadge status={task.status} withBorder />
                                                 <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getPriorityColor(task.priority)}`}>
                                                     {task.priority || 'Normal'}
                                                 </span>
@@ -256,15 +259,15 @@ const TaskList = () => {
                                         </p>
                                         <div className="flex flex-wrap gap-4 text-sm text-gray-500">
                                             <div className="flex items-center gap-1">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                {/* <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
+                                                </svg> */}
+
+                                                 <CalendarDays className="w-4 h-4 sm:w-4 sm:h-4 md:w-4 md:h-4 lg:w-4 lg:h-4 flex-shrink-0 " />
                                                 <span>Start: {formatDate(task.starting_date || task.start_date)}</span>
                                             </div>
                                             <div className="flex items-center gap-1">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
+                                                <CalendarDays className="w-4 h-4 sm:w-4 sm:h-4 md:w-4 md:h-4 lg:w-4 lg:h-4 flex-shrink-0 " />
                                                 <span>Due: {formatDate(task.due_date || task.end_date)}</span>
                                             </div>
                                             {task.assigned_to && (

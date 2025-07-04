@@ -1,28 +1,28 @@
 import { Calendar, Users, User, Eye, Edit } from "lucide-react";
-import { getTaskStatusColor, getTaskStatusIcon } from "./utils";
 import { useEffect, useState } from 'react';
+import StatusBadge from './../StatusBadge';
 
-const TaskListView = ({task, navigateTo, onView, onEdit  }) => {
-    const [createdBy, setCreatedBy] = useState('Unassigned');
-      console.log('createdBy', createdBy);
-      console.log('createdBy', task.user_id);
-      
-       useEffect(() => {
-         if (task && task.assigned_members) {
-          console.log('task.assigned_members', task.assigned_members);
-          
-           const creator = task?.assigned_members?.find(user => user.id == task.user_id);
-           console.log('creator', creator);
-           
-           setCreatedBy(creator?.name || 'Not Available');
-         }
-       }, [task]);
-  
+const TaskListView = ({ task, navigateTo, onView, onEdit }) => {
+  const [createdBy, setCreatedBy] = useState('Unassigned');
+  console.log('createdBy', createdBy);
+  console.log('createdBy', task.user_id);
+
+  useEffect(() => {
+    if (task && task.assigned_members) {
+      console.log('task.assigned_members', task.assigned_members);
+
+      const creator = task?.assigned_members?.find(user => user.id == task.user_id);
+      console.log('creator', creator);
+
+      setCreatedBy(creator?.name || 'Not Available');
+    }
+  }, [task]);
+
 
   return (
     <div
       onClick={() => navigateTo(task.id)}
-      className="bg-white rounded-xl shadow-sm hover:shadow-md transition cursor-pointer border border-gray-100"
+      className="bg-white rounded-xl  border border-transparent   hover:border-[#5356FF]  transition duration-300 cursor-pointer transform"
     >
       <div className="p-4">
         <div className="flex justify-between">
@@ -34,19 +34,17 @@ const TaskListView = ({task, navigateTo, onView, onEdit  }) => {
               </div>
 
               <div className="flex items-center space-x-6 text-sm text-gray-600">
-                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getTaskStatusColor(task.status)}`}>
-                  {getTaskStatusIcon(task.status)}
-                  <span className="ml-1">{task.status || 'No Status'}</span>
-                </span>
+                <StatusBadge status={task.status} withBorder />
 
-               
+
+
 
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-1" />
                   {task.members?.length || 0}
                 </div>
 
-             
+
 
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-1" />
@@ -66,7 +64,7 @@ const TaskListView = ({task, navigateTo, onView, onEdit  }) => {
           </div>
         </div>
 
-       
+
       </div>
     </div>
   );

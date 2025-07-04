@@ -8,12 +8,12 @@ import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { getTasksByProject } from '../../actions/taskActions';
 import TaskList from '../task/TaskList';
-import { ClipboardList, Edit3, FileText, Pencil, ShieldCheck, Users } from 'lucide-react';
+import { CalendarDays, ClipboardList, Edit3, FileText, Pencil, ShieldCheck, Users } from 'lucide-react';
 import { deleteProject } from '../../actions/projectActions';
 import DeleteModel from '../models/DeleteModel';
-import calender from '../../assets/calendar.svg';
-import multiUser from '../../assets/multiUser.svg';
+
 import Edit from '../../assets/edit.svg';
+import StatusBadge from './../StatusBadge';
 
 
 export default function ProjectDetails() {
@@ -121,16 +121,7 @@ export default function ProjectDetails() {
         return new Date(dateString) < new Date();
     };
 
-    // Get project status color with better contrast
-    const getProjectStatusColor = (status) => {
-        switch (status?.toLowerCase()) {
-            case 'completed': return 'bg-green-600 text-white';
-            case 'in progress': return 'bg-[#5356FF] text-white';
-            case 'pending': return 'bg-red-600 text-white';
-            case 'on hold': return 'bg-gray-600 text-white';
-            default: return 'bg-blue-600 text-white';
-        }
-    };
+    
     const confirmDelete = (project) => {
         // Safely check for user object fields
         setDeleteContent(`Project "${project.title}"`);
@@ -182,9 +173,8 @@ export default function ProjectDetails() {
                                 <h1 className="text-3xl text-black lg:text-4xl font-bold break-words">
                                     {project.title}
                                 </h1>
-                                <span className={`px-4 py-2 rounded-full text-black text-sm font-semibold ${getProjectStatusColor(project.status)} shadow-md whitespace-nowrap`}>
-                                    {project.status || 'Not Set'}
-                                </span>
+                            
+                                 <StatusBadge status={project.status} withBorder />
                             </div>
 
                             {/* Project summary info */}
@@ -193,20 +183,23 @@ export default function ProjectDetails() {
                                     {/* <svg className=" text-black w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg> */}
-                                    <img src={multiUser} alt=""  className='h-4 w-4'/>
+                                    <Users className="w-4 h-4 sm:w-4 sm:h-4 md:w-4 md:h-4 lg:w-4 lg:h-4 flex-shrink-0" />
+
+                                    {/* <img src={multiUser} alt=""  className='h-4 w-4'/> */}
                                     <span className='text-black'>{teamMembers.length} team members</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     {/* <svg className=" text-black w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg> */}
-                                    <img src={calender} alt=""  className='h-4 w-4'/>
+                                    <CalendarDays className="w-4 h-4 sm:w-4 sm:h-4 md:w-4 md:h-4 lg:w-4 lg:h-4 flex-shrink-0" />
+                                    {/* <img src={calender} alt="" className='h-4 w-4' /> */}
                                     <span className='text-black'>Start: {formatDate(project.starting_date)}</span>
 
                                 </div>
                                 <div className="flex items-center gap-2">
-                                                                       <img src={calender} alt=""  className='h-4 w-4'/>
-
+                                    {/* <img src={calender} alt="" className='h-4 w-4' /> */}
+                                    <CalendarDays className="w-4 h-4 sm:w-4 sm:h-4 md:w-4 md:h-4 lg:w-4 lg:h-4 flex-shrink-0 text-gray" />
                                     <span className='text-black'>Due: {formatDate(project.due_date)}</span>
                                     {isOverdue(project.due_date) && (
                                         <span className="px-2 py-1 bg-red-500 text-white text-xs rounded-full">
@@ -227,10 +220,8 @@ export default function ProjectDetails() {
                                     className="px-6 py-3 border-1 border-black backdrop-blur-sm text-black rounded-3xl font-medium transition-all duration-200 hover:scale-101 flex items-center justify-center gap-2"
                                     aria-label={`Edit ${project.title}`}
                                 >
-                                    {/* <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg> */}
-                                    <img src={Edit} alt="" className='w-4 h-4' />
+                            
+                                    <Pencil className='w-4 h-4' />
                                     Edit Project
                                 </NavLink>
                                 <button
@@ -427,7 +418,7 @@ export default function ProjectDetails() {
 
 
 
-            <DeleteModel                isOpen={showModal}
+            <DeleteModel isOpen={showModal}
                 onConfirm={handleDelete}
                 onCancel={() => setShowModal(false)}
                 deleteTarget={deleteContent}

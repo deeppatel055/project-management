@@ -1,17 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadCurrentUser } from '../../actions/userActions';
-import { NavLink } from 'react-router-dom';
-import { Home, Menu, LogOut, Settings, ChevronDown, Plus, FolderPlus, MoreHorizontal, ChevronLeft, ChevronRight, Users } from 'lucide-react';
-import { getAllProjects } from '../../actions/projectActions';
-import homeIcon from './../../assets/home.svg';
-import multiUser from './../../assets/multiUser.svg';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Home, Menu, LogOut, Settings, ChevronDown, Plus, FolderPlus, MoreHorizontal, Edit, ChevronLeft, ChevronRight, Users, MoreVertical, Trash2 } from 'lucide-react';
+import { deleteProject, getAllProjects } from '../../actions/projectActions';
+import DeleteModel from '../models/DeleteModel';
+
 const Header = ({ hname, isOpen, isMobile, toggleSidebar, logout }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { user } = useSelector(state => state.user);
   const { projects = [] } = useSelector(state => state.projects);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [deleteContent, setDeleteContent] = useState('');
+  const [projectToDelete, setProjectToDelete] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
 
   useEffect(() => {
     dispatch(loadCurrentUser());
@@ -45,6 +52,36 @@ const Header = ({ hname, isOpen, isMobile, toggleSidebar, logout }) => {
 
   const visibleProjects = showAllProjects ? projects : projects.slice(0, 5);
 
+  const handleEditProject = (e, projectId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowMenu(false);
+    // Add your edit logic here
+    navigate(`/projects/${projectId}/edit`);
+    console.log('Edit project:', projectId);
+  };
+
+
+  const confirmDelete = (project) => {
+    // Safely check for user object fields
+    setDeleteContent(`Project "${project.title}"`);
+
+    setProjectToDelete(project);
+    setShowModal(true);
+
+
+  };
+  // Handle delete project with loading state
+  const handleDelete = async () => {
+    if (!projectToDelete) return;
+
+    await dispatch(deleteProject(projectToDelete.id));
+    setShowModal(false);
+    setProjectToDelete(null);
+    setDeleteContent('');
+    navigate('/')
+
+  };
   return (
     <div className="relative">
       {/* Mobile Overlay */}
@@ -87,8 +124,8 @@ const Header = ({ hname, isOpen, isMobile, toggleSidebar, logout }) => {
                 }
                 onClick={() => isMobile && toggleSidebar()}
               >
-                {/* <Home className="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-5 lg:h-5 flex-shrink-0" /> */}
-                <img src={homeIcon} alt="" className="w-5 h-5"  />
+                <Home className="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-5 lg:h-5 flex-shrink-0" />
+                {/* <img src={homeIcon} alt="" className="w-5 h-5"  /> */}
                 {(isOpen || isMobile) && (
                   <span className="text-sm sm:text-base md:text-lg lg:text-base truncate">
                     Dashboard
@@ -105,16 +142,16 @@ const Header = ({ hname, isOpen, isMobile, toggleSidebar, logout }) => {
               {/* Admin Users Link */}
               {['admin', 'superadmin'].includes(user?.role) && (
                 <NavLink
-                to="/users"
-                className={({ isActive }) =>
-                  `${isActive ? 'bg-[#5356FF] text-white shadow-lg' : 'text-black hover:bg-[#dfdffb]'} 
+                  to="/users"
+                  className={({ isActive }) =>
+                    `${isActive ? 'bg-[#5356FF] text-white shadow-lg' : 'text-black hover:bg-[#dfdffb]'} 
                 flex items-center gap-3 sm:gap-4 md:gap-4 lg:gap-4 px-3 sm:px-4 md:px-5 lg:px-4 py-2.5 sm:py-3 md:py-3.5 lg:py-3 rounded-xl transition-all duration-200 
                 ${!isOpen && !isMobile ? 'justify-center' : ''} group relative`
-              }
-              onClick={() => isMobile && toggleSidebar()}
-              >
-                  {/* <Users className="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-5 lg:h-5 flex-shrink-0" /> */}
-              <img src={multiUser} alt="" className="w-5 h-5"  />
+                  }
+                  onClick={() => isMobile && toggleSidebar()}
+                >
+                  <Users className="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-5 lg:h-5 flex-shrink-0" />
+                  {/* <img src={multiUser} alt="" className="w-5 h-5"  />  */}
 
                   {(isOpen || isMobile) && (
                     <span className="text-sm sm:text-base md:text-lg lg:text-base truncate">
@@ -138,7 +175,7 @@ const Header = ({ hname, isOpen, isMobile, toggleSidebar, logout }) => {
             </div>
 
             {/* Projects List */}
-            <div className={`flex-1 p-1 space-y-1    custom-scroll overflow-x-hidden ${isOpen ? 'overflow-y-auto' : 'overflow-y-hidden'}`}>
+            {/* <div className={`flex-1 p-1 space-y-1    custom-scroll overflow-x-hidden ${isOpen ? 'overflow-y-auto' : 'overflow-y-hidden'}`}>
               {visibleProjects.map((project) => (
                 <NavLink
                   key={project.id}
@@ -156,7 +193,6 @@ const Header = ({ hname, isOpen, isMobile, toggleSidebar, logout }) => {
                       {project.title}
                     </span>
                   )}
-                  {/* Tooltip for collapsed state */}
                   {!isOpen && !isMobile && (
                     <div className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 max-w-xs">
                       {project.title}
@@ -164,8 +200,6 @@ const Header = ({ hname, isOpen, isMobile, toggleSidebar, logout }) => {
                   )}
                 </NavLink>
               ))}
-
-              {/* More Projects Button */}
               {projects.length > 5 && (isOpen || isMobile) && (
                 <button
                   onClick={handleMoreProjectsClick}
@@ -174,6 +208,88 @@ const Header = ({ hname, isOpen, isMobile, toggleSidebar, logout }) => {
                 >
                   <MoreHorizontal className={`w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-5 lg:h-5 flex-shrink-0 transition-transform duration-200 
                       ${showAllProjects ? 'rotate-90' : ''}`} />
+                  <span className="text-sm sm:text-base md:text-lg lg:text-base">
+                    {showAllProjects ? 'Show Less' : `Show ${projects.length - 5} More`}
+                  </span>
+                </button>
+              )}
+            </div> */}
+            <div className={`flex-1 p-1 space-y-1 custom-scroll overflow-x-hidden ${isOpen ? 'overflow-y-auto' : 'overflow-y-hidden'}`}>
+              {visibleProjects.map((project) => (
+                <div key={project.id} className="relative group">
+                  <NavLink
+                    to={`/projects/${project.id}`}
+                    className={({ isActive }) =>
+                      `${isActive ? 'bg-[#5356FF] text-white shadow-lg' : 'text-black hover:bg-[#dfdffb]'}
+               flex items-center gap-3 sm:gap-4 md:gap-4 lg:gap-4 px-3 sm:px-4 md:px-5 lg:px-4 py-2.5 sm:py-3 md:py-3.5 lg:py-3 rounded-xl transition-all duration-200
+               ${!isOpen && !isMobile ? 'justify-center' : ''} group relative`
+                    }
+                    onClick={() => isMobile && toggleSidebar()}
+                  >
+                    <FolderPlus className="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-5 lg:h-5 flex-shrink-0" />
+                    {(isOpen || isMobile) && (
+                      <span className="text-sm sm:text-base md:text-lg lg:text-base truncate flex-1" title={project.title}>
+                        {project.title}
+                      </span>
+                    )}
+
+                    {(isOpen || isMobile) && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setShowMenu(!showMenu);
+                        }}
+                        className=" group-hover:opacity-100 hover:bg-black/10 rounded-full p-1 transition-all duration-200 flex-shrink-0"
+                      >
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+                    )}
+
+                    {!isOpen && !isMobile && (
+                      <div className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 max-w-xs">
+                        {project.title}
+                      </div>
+                    )}
+                  </NavLink>
+
+                  {showMenu && (isOpen || isMobile) && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-40"
+                        onClick={() => setShowMenu(false)}
+                      />
+
+                      <div className="absolute right-2 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-[120px]">
+                        <button
+                          onClick={(e) => handleEditProject(e, project.id)}
+                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-t-lg transition-colors"
+                        >
+                          <Edit className="w-4 h-4" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => confirmDelete(project)}
+                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-lg transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Delete
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+              ))}
+
+              {projects.length > 5 && (isOpen || isMobile) && (
+                <button
+                  onClick={handleMoreProjectsClick}
+                  className="w-full flex items-center gap-3 sm:gap-4 md:gap-4 lg:gap-4 px-3 sm:px-4 md:px-5 lg:px-4 py-2.5 sm:py-3 md:py-3.5 lg:py-3 rounded-xl
+           text-black hover:bg-[#dfdffb] transition-all duration-200"
+                >
+                  <MoreHorizontal className={`w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-5 lg:h-5 flex-shrink-0 transition-transform duration-200
+           ${showAllProjects ? 'rotate-90' : ''}`} />
                   <span className="text-sm sm:text-base md:text-lg lg:text-base">
                     {showAllProjects ? 'Show Less' : `Show ${projects.length - 5} More`}
                   </span>
@@ -353,6 +469,12 @@ const Header = ({ hname, isOpen, isMobile, toggleSidebar, logout }) => {
               background: #a0aec0;
             }
           `}</style>
+
+      <DeleteModel isOpen={showModal}
+        onConfirm={handleDelete}
+        onCancel={() => setShowModal(false)}
+        deleteTarget={deleteContent}
+      />
     </div>
   );
 };

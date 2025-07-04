@@ -1,8 +1,8 @@
-import { Calendar, Users, Tag, User,  Edit,  MoreVertical, Trash2 } from 'lucide-react';
-import { getStatusColor, getStatusIcon } from './utils';
+import { Calendar, Users, Tag, User, Edit, MoreVertical, Trash2, CalendarDays, ClipboardList } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
+import StatusBadge from './../StatusBadge';
 
-const ProjectGridView = ({  project, onEdit, onDelete, navigateTo, userTasks  }) => {
+const ProjectGridView = ({ project, onEdit, onDelete, navigateTo, userTasks }) => {
   const [createdBy, setCreatedBy] = useState('Unassigned');
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
@@ -50,7 +50,7 @@ const ProjectGridView = ({  project, onEdit, onDelete, navigateTo, userTasks  })
   return (
     <div
       onClick={() => navigateTo(project.id)}
-      className="bg-white rounded-xl hover: transition duration-300 cursor-pointer transform hover:shadow-xl relative"
+      className="bg-white rounded-xl border border-transparent   hover:border-[#5356FF]  transition duration-300 cursor-pointer transform"
     >
       <div className="p-6">
         <div className="flex justify-between items-start ">
@@ -95,22 +95,20 @@ const ProjectGridView = ({  project, onEdit, onDelete, navigateTo, userTasks  })
         <div className="pt-4 border-t border-gray-200"></div>
 
         <div className="flex justify-between items-center mb-4">
-          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(project.status)}`}>
-            {getStatusIcon(project.status)}
-            <span className="ml-1">{project.status || 'No Status'}</span>
-          </span>
+          <StatusBadge status={project.status} withBorder />
+
         </div>
 
         <div className="space-y-3">
 
           <div className="flex justify-between text-sm text-gray-600">
             <div className="flex items-center">
-              <Calendar className="w-4 h-4 mr-2" />
+              <CalendarDays className="w-4 h-4 mr-2" />
               Due: {project.due_date ? new Date(project.due_date).toLocaleDateString() : 'No due date'}
             </div>
 
             <div className="flex items-center">
-              <Tag className="w-4 h-4 mr-2" />
+              <ClipboardList className="w-4 h-4 mr-2" />
               {userTasks?.length || 0} tasks
             </div>
           </div>
@@ -121,7 +119,7 @@ const ProjectGridView = ({  project, onEdit, onDelete, navigateTo, userTasks  })
               {project.members?.length || 0} members
             </div>
             <div className="flex items-center">
-              <User className="w-4 h-4 text-gray-400 mr-2" />
+              <User className="w-4 h-4  mr-2" />
               <span className="text-sm text-gray-600">{createdBy || 'Unassigned'}</span>
             </div>
 

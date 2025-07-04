@@ -1,50 +1,85 @@
-import { Grid3X3, List } from 'lucide-react';
-import { PROJECT_STATUSES, getStatusIcon } from './utils';
+import { useState } from 'react';
+import { PROJECT_STATUSES } from './utils';
+import GridListView from './GridListView';
+import StatusBadge from './../StatusBadge';
 
-const ProjectFilterBar = ({ projectFilter, setProjectFilter, viewMode, setViewMode }) => (
-  <div className="mb-6 flex flex-wrap justify-between gap-2 items-center">
-    <div className="flex flex-wrap gap-2">
-      <button
-        onClick={() => setProjectFilter('all')}
-        className={`px-4 py-2 rounded-lg font-medium transition flex items-center space-x-2 ${
-          projectFilter === 'all'
-            ? 'bg-blue-600 text-white shadow-lg scale-105'
-            : 'bg-white/50 text-gray-600 hover:bg-white hover:text-gray-900 border border-gray-200'
-        }`}
-      >
-        <span>All Projects</span>
-      </button>
-      {PROJECT_STATUSES.map((status) => (
-        <button
-          key={status.value}
-          onClick={() => setProjectFilter(status.value)}
-          className={`px-4 py-2 rounded-lg font-medium flex items-center space-x-2 transition ${
-            projectFilter === status.value
-              ? `scale-105 ring-2 ring-offset-1 ${status.color}`
-              : `${status.color} hover:opacity-90`
-          }`}
-        >
-          {getStatusIcon(status.value)}
-          <span>{status.label}</span>
-        </button>
-      ))}
-    </div>
+const ProjectFilterBar = ({ projectFilter, setProjectFilter, viewMode, setViewMode }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    <div className="flex items-center space-x-2 bg-white/50 p-1 rounded-lg">
-      <button
-        onClick={() => setViewMode('grid')}
-        className={`p-2 rounded-md transition ${viewMode === 'grid' ? 'bg-blue-600 text-white shadow' : 'text-gray-600 hover:bg-white'}`}
-      >
-        <Grid3X3 className="w-4 h-4" />
-      </button>
-      <button
-        onClick={() => setViewMode('list')}
-        className={`p-2 rounded-md transition ${viewMode === 'list' ? 'bg-blue-600 text-white shadow' : 'text-gray-600 hover:bg-white'}`}
-      >
-        <List className="w-4 h-4" />
-      </button>
+  const getFilterLabel = () => {
+    if (projectFilter === 'all') return 'All Projects';
+    const status = PROJECT_STATUSES.find(s => s.value === projectFilter);
+    return status ? status.label || status.value : 'All Projects';
+  };
+
+  const handleStatusSelect = (statusValue) => {
+    setProjectFilter(statusValue);
+    setIsDropdownOpen(false);
+  };
+
+  return (
+    <div className="mb-6 flex flex-wrap justify-between gap-2 items-center">
+      <div className="flex flex-wrap gap-2">
+        {/* Status Filter Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className={`px-4 py-2 rounded-lg font-medium transition flex items-center space-x-2 border ${
+              projectFilter !== 'all'
+                ? 'bg-[#5356FF] text-white shadow-lg scale-105 border-blue-600'
+                : 'bg-white/50 text-gray-600 hover:bg-white hover:text-gray-900 border-gray-200'
+            }`}
+          >
+            <span>{getFilterLabel()}</span>
+            <svg
+              className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {/* Dropdown Menu */}
+          {isDropdownOpen && (
+            <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+              <div className="py-1">
+                {/* All Projects Option */}
+                <button
+                  onClick={() => handleStatusSelect('all')}
+                  className={`w-full text-left px-3 py-2 hover:bg-gray-50 transition-colors ${
+                    projectFilter === 'all' ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                  }`}
+                >
+                  <span>All Projects</span>
+                </button>
+                
+                {/* Status Options */}
+                {PROJECT_STATUSES.map((status) => (
+                  <button
+                    key={status.value}
+                    onClick={() => handleStatusSelect(status.value)}
+                    className={`w-full text-left px-3 py-2 hover:bg-gray-50 transition-colors flex items-center space-x-2 ${
+                      projectFilter === status.value ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                    }`}
+                  >
+                    <StatusBadge
+                      status={status.value}
+                      withBorder
+                      className="text-sm"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <GridListView viewMode={viewMode} setViewMode={setViewMode} />
     </div>
-  </div>
-);
+  );
+};
 
 export default ProjectFilterBar;

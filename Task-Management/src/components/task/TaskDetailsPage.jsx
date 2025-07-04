@@ -16,6 +16,7 @@ import TaskNotes from "./TaskNote";
 import AuditHistory from "./TaskAudit";
 import DeleteModel from './../models/DeleteModel';
 import Edit from '../../assets/edit.svg'
+import StatusBadge from './../StatusBadge';
 
 export default function TaskDetails() {
     const navigate = useNavigate()
@@ -154,8 +155,8 @@ export default function TaskDetails() {
                                 <h1 className="text-3xl text-black lg:text-4xl font-bold break-words">
                                     {task?.title}
                                 </h1>
-                                <span className={`px-4 py-2 rounded-full text-black text-sm font-semibold ${getProjectStatusColor(task?.status)} shadow-md whitespace-nowrap`}> {task?.status || 'Not Set'}</span>
 
+                                <StatusBadge status={task.status} withBorder />
                                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${priorityConfig.color} ${priorityConfig.pulse}`}>
                                     <PriorityIcon className="h-4 w-4 mr-1.5" />
                                     {task?.priority}
