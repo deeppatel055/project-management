@@ -18,7 +18,7 @@ app.use(cors({
   // origin:"https://project-management-frontend-1lrl.onrender.com",
   origin: [
     "http://localhost:5173",
-    "https://project-management-frontend-1lrl.onrender.com"
+  
   ],
   credentials: true,
 }));
