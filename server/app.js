@@ -14,7 +14,8 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  // origin: 'http://localhost:5173',
+  origin:"https://project-management-frontend-1lrl.onrender.com",
   credentials: true,
 }));
 
