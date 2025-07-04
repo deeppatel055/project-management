@@ -11,8 +11,8 @@ import Layout from '../components/navbar/Layout';
 import HomePage from '../pages/HomePage';
 import API from '../services/api';
 
-import ForgotPasswordPage from '../pages/forgotPasswordPage';
-import ResetPasswordPage from '../pages/ResetPasswordPage';
+// import ForgotPasswordPage from '../pages/forgotPasswordPage';
+// import ResetPasswordPage from '../pages/ResetPasswordPage';
 import InactivityHandler from '../components/utils/InactivityHandler';
 
 // Import your new Project pages/components here:
@@ -176,8 +176,8 @@ const AppRoutes = () => {
         path="/login"
         element={<LoginPage setIsAuthenticated={setIsAuthenticated} />}
       />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+      {/* <Route path="/forgot-password" element={<ForgotPasswordPage />} /> */}
+      {/* <Route path="/reset-password/:token" element={<ResetPasswordPage />} /> */}
       <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );
