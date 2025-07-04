@@ -17,6 +17,7 @@ import AuditHistory from "./TaskAudit";
 import DeleteModel from './../models/DeleteModel';
 import Edit from '../../assets/edit.svg'
 import StatusBadge from './../StatusBadge';
+import { DEFAULT_PROFILE_PIC } from "../../config";
 
 export default function TaskDetails() {
     const navigate = useNavigate()
@@ -284,11 +285,11 @@ export default function TaskDetails() {
                                 </div>
                                 <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100 hover:shadow-md transition-shadow">
                                     <img
-                                        src={taskUser.profile_picture || 'http://localhost:5000/public/images/default-profile.png'}
+                                        src={taskUser.profile_picture || DEFAULT_PROFILE_PIC}
                                         alt={taskUser.name}
                                         className="w-8 h-8 rounded-full object-cover"
                                         onError={(e) => {
-                                            e.target.src = 'http://localhost:5000/public/images/default-profile.png';
+                                            e.target.src = DEFAULT_PROFILE_PIC;
                                         }}
                                     />
                                     <div className="min-w-0 flex-1">
@@ -316,11 +317,11 @@ export default function TaskDetails() {
                                             {taskUser.defaultUser.map((user) => (
                                                 <div key={user.id} className="flex items-center gap-3 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100 hover:shadow-md transition-shadow">
                                                     <img
-                                                        src={user.profile_picture || 'http://localhost:5000/public/images/default-profile.png'}
+                                                        src={user.profile_picture || DEFAULT_PROFILE_PIC}
                                                         alt={user.name}
                                                         className="w-8 h-8 rounded-full object-cover"
                                                         onError={(e) => {
-                                                            e.target.src = 'http://localhost:5000/public/images/default-profile.png';
+                                                            e.target.src = DEFAULT_PROFILE_PIC;
                                                         }}
                                                     />
                                                     <div className="min-w-0 flex-1">
@@ -374,11 +375,11 @@ export default function TaskDetails() {
                                             className="flex items-center gap-3 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100 hover:shadow-md transition-shadow"
                                         >
                                             <img
-                                                src={member.profile_picture || 'http://localhost:5000/public/images/default-profile.png'}
+                                                src={member.profile_picture || DEFAULT_PROFILE_PIC}
                                                 alt={member.name}
                                                 className="w-8 h-8 rounded-full object-cover"
                                                 onError={(e) => {
-                                                    e.target.src = 'http://localhost:5000/public/images/default-profile.png';
+                                                    e.target.src = DEFAULT_PROFILE_PIC;
                                                 }}
                                             />
                                             <div className="min-w-0 flex-1">

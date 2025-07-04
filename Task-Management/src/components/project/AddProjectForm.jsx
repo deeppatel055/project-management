@@ -232,11 +232,11 @@ const handleSubmit = async (e) => {
                   >
                     {/* <User size={14} /> */}
                     <img
-                      src={user.profile_picture || 'http://localhost:5000/public/images/default-profile.png'}
+                      src={user.profile_picture || 'DEFAULT_PROFILE_PIC'}
                       alt={user.name}
                       className="w-5 h-5 rounded-full object-cover"
                       onError={(e) => {
-                        e.target.src = 'http://localhost:5000/public/images/default-profile.png';
+                        e.target.src = 'DEFAULT_PROFILE_PIC';
                       }}
                     />
                     <span>{user.email}</span>
@@ -312,11 +312,11 @@ const handleSubmit = async (e) => {
                         <div className="ml-3 flex items-center gap-3">
                           {/* <User className="text-gray-400 mr-2" size={16} /> */}
                           <img
-                            src={user.profile_picture || 'http://localhost:5000/public/images/default-profile.png'}
+                            src={user.profile_picture || 'DEFAULT_PROFILE_PIC'}
                             alt={user.name}
                             className="w-6.5 h-6.5 rounded-full object-cover"
                             onError={(e) => {
-                              e.target.src = 'http://localhost:5000/public/images/default-profile.png';
+                              e.target.src = 'DEFAULT_PROFILE_PIC';
                             }}
                           />
                           <div>

@@ -4,6 +4,7 @@ import { createTask, getStatuses } from '../../actions/taskActions';
 import { useParams } from 'react-router-dom';
 import { Search, X, ChevronDown, ChevronUp, Calendar } from "lucide-react";
 import API from '../../services/api';
+import { DEFAULT_PROFILE_PIC } from '../../config';
 
 const AddTaskForm = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -208,11 +209,11 @@ const AddTaskForm = ({ onClose }) => {
                 {selectedUsers.map((user) => (
                   <div key={user.id} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
                     <img
-                      src={user.profile_picture || 'http://localhost:5000/public/images/default-profile.png'}
+                      src={user.profile_picture || DEFAULT_PROFILE_PIC}
                       alt={user.name}
                       className="w-5 h-5 rounded-full object-cover"
                       onError={(e) => {
-                        e.target.src = 'http://localhost:5000/public/images/default-profile.png';
+                        e.target.src = DEFAULT_PROFILE_PIC;
                       }}
                     />
                     <span>{user.email}</span>
@@ -274,11 +275,11 @@ const AddTaskForm = ({ onClose }) => {
                         />
                         <div className="ml-3 flex items-center gap-2">
                           <img
-                            src={user.profile_picture || 'http://localhost:5000/public/images/default-profile.png'}
+                            src={user.profile_picture || DEFAULT_PROFILE_PIC}
                             alt={user.name}
                             className="w-.56 h-6.5 rounded-full object-cover"
                             onError={(e) => {
-                              e.target.src = 'http://localhost:5000/public/images/default-profile.png';
+                              e.target.src = DEFAULT_PROFILE_PIC;
                             }}
                           />
                           <div>

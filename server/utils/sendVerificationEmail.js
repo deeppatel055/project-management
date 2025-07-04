@@ -1,10 +1,11 @@
 const  jwt = require('jsonwebtoken')
 const transporter  = require('./mailer')
 
+const { BASE_URL } = require('../config/constants.js');
 
 const sendVerificationEmail = async (email) => {
     const token = jwt.sign({email}, process.env.EMAIL_SECRET, {expiresIn: '1d'})
-    const link = `http://localhost:5000/api/users/verify?token=${token}`
+   const link = `${BASE_URL}/api/users/verify?token=${token}`;
 
     await transporter.sendMail({
         from: process.env.EMAIL_USER,

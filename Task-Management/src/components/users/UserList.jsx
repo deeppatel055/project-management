@@ -6,6 +6,7 @@ import { getAllUsers, deleteUser } from '../../actions/userActions';
 import Loading from '../common/Loading';
 import DeleteModel from './../models/DeleteModel';
 import EditLogo from '../../assets/edit.svg';
+import { DEFAULT_PROFILE_PIC } from '../../config';
 
 
 const UserList = ({ sidebarOpen, isMobile, isAuthenticated }) => {
@@ -190,7 +191,7 @@ const UserList = ({ sidebarOpen, isMobile, isAuthenticated }) => {
                         alt={user.name}
                         className="w-12 h-12 rounded-full object-cover"
                         onError={(e) => {
-                          e.target.src = 'http://localhost:5000/public/images/default-profile.png';
+                          e.target.src = DEFAULT_PROFILE_PIC;
                         }}
                       />
                       <div>
@@ -279,11 +280,11 @@ const UserList = ({ sidebarOpen, isMobile, isAuthenticated }) => {
                           <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <img
-                                src={user.profile_picture || 'http://localhost:5000/public/images/default-profile.png'}
+                                src={user.profile_picture || DEFAULT_PROFILE_PIC}
                                 alt={user.name}
                                 className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover mr-3 lg:mr-4"
                                 onError={(e) => {
-                                  e.target.src = 'http://localhost:5000/public/images/default-profile.png';
+                                  e.target.src = DEFAULT_PROFILE_PIC;
                                 }}
                               />
                               <div className="min-w-0 flex-1">
