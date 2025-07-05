@@ -1,7 +1,8 @@
 // config/constants.js
 require('dotenv').config();
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
+const BASE_URL = process.env.BASE_URL 
+console.log('base',process.env.BASE_URL);
 
 module.exports = {
   BASE_URL,
